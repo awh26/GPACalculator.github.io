@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+	<!-- 
+		Alex Hanna Function Project
+		Due 10/28/19
+		Description - This code is for a webpage which contains a quiz which asks the user questions and then determines which character a certain TV show that they are most resemble.
+	-->
+<html>
+	<head>
+		<!-- metadata-->
+		<meta charset="utf-8">
+		<title>Function Project</title>
+
+		<!-- Fonts import-->
+		<link href="https://fonts.googleapis.com/css?family=Lato|Raleway&display=swap" rel="stylesheet">
+
+		<!-- jQuery import-->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+		<!-- Bootstrap import-->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+		<style>
+			body {
+				background-color:#121212;
+				color:white;
+				font-family: 'Open Sans', sans-serif;
+			}
+
+			h2,h3 {
+				font-family: 'Lato', sans-serif;
+			}
+
+			h2 {
+				color:#d65a31;
+			}
+
+			.container {
+				width:80%;
+				margin:auto;
+				overflow:hidden;
+				text-align:center;
+				background-color:#212121; 
+				border-radius:10%; 
+				margin-top:10%;
+				margin-bottom:10%;
+			}
+
+			.row {
+				padding-top:5%;
+
+			}
+
+			#quizbox, #result, .finalimage, .removeCharacter {
+				display:none;
+			}
+
+			button {
+				color:white;
+				background-color:#212121;
+				border:1px solid white;
+				border-radius:5px;
+			}
+
+			button:hover {
+				background-color:#313131;
+				cursor:pointer;
+			}
+
+			.selection:hover {
+				background-color:#414141;
+			}
+
+			.selected {
+				background-color:green;
+			}
+
+			.selected:hover {
+				background-color:green;
+			}
+
+			.finalimage img {
+				max-width:80%;
+			}
+
+			.finalimage p {
+				font-weight:bold;
+			}
+
+			.characterResult {
+				display:block;
+			}
+
+			#underconstruction {
+				display:none;
+				position:fixed;
+				z-index:2;
+				top:0;
+				left:0;
+				height:100%;
+				width:100%;
+				background-color: rgb(0,0,0); /* Fallback color */
+				background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+				opacity:50%;
+			}
+			
+			#underconstruction p {
+				text-align: center;
+				margin-top:50vh;
+				font-size:40px;
+				color:yellow;
+			}
+
+		</style>
+
+		<script>
+			var whichQuiz;
+
+			//no parameters, no return, clears the home page and replaces it with the Office quiz container
+			function takeOfficeQuiz () {
+				document.getElementById("quizbox").style.display = "block";
+				document.getElementById("opener").style.display = "none";
+				whichQuiz = "office";
+			}
+
+			//no parameters, no return, clears the home page and replaces it with the Rick and Morty quiz container
+			function takeMortyQuiz () {
+				document.getElementById("underconstruction").style.display = "block";
+				document.getElementById("quizbox").style.display = "block";
+				document.getElementById("opener").style.display = "none";
+				whichQuiz = "morty";
+			}
+
+			//no parameters, no return, clears the all entered values when the quiz is restarted
+			function clearAnswers (){
+				var QandAarray = [q1a1, q1a2, q1a3, q1a4, q2a1, q2a2, q2a3, q2a4, q3a1, q3a2, q3a3, q3a4, q4a1, q4a2, q4a3, q4a4];
+				for (var i = 0; i <16 ; i++) {
+					$(QandAarray[i]).removeClass("selected");
+				}
+			}
+
+			//no parameters, no return, goes back to home page
+			function goBack () {
+				document.getElementById("quizbox").style.display = "none";
+				document.getElementById("opener").style.display = "block";
+				document.getElementById("result").style.display = "none";
+				document.getElementById("underconstruction").style.display = "none";
+				
+				//calls function within function
+				clearAnswers();
+			}
+
+			//no parameters, no return, calculates result
+			function getResult () {
+				document.getElementById("quizbox").style.display = "none";
+				document.getElementById("result").style.display = "block";
+
+				if (whichQuiz = "office") {
+					var totalPoints = 0;
+					if ($(q1a2).hasClass("selected")) {
+						totalPoints += 2;
+					} else if ($(q1a3).hasClass("selected")) {
+						totalPoints += 4;
+					} else if ($(q1a4).hasClass("selected")) {
+						totalPoints += 6;
+					}
+					if ($(q2a2).hasClass("selected")) {
+						totalPoints += 2;
+					} else if ($(q2a3).hasClass("selected")) {
+						totalPoints += 4;
+					} else if ($(q2a4).hasClass("selected")) {
+						totalPoints += 6;
+					} 
+					if ($(q3a2).hasClass("selected")) {
+						totalPoints += 2;
+					} else if ($(q3a3).hasClass("selected")) {
+						totalPoints += 4;
+					} else if ($(q3a4).hasClass("selected")) {
+						totalPoints += 6;
+					}
+					if ($(q4a2).hasClass("selected")) {
+						totalPoints += 2;
+					} else if ($(q4a3).hasClass("selected")) {
+						totalPoints += 4;
+					} else if ($(q4a4).hasClass("selected")) {
+						totalPoints += 6;
+					}
+
+					//no parameters, returns character based on total point value
+					function getCharacter() {
+						if (totalPoints<2){
+							return toby;
+						} else if (totalPoints<4) {
+							return pam;
+						} else if (totalPoints<6) {
+ 							return jim;
+ 						} else if (totalPoints<8) {
+							return phyllis;
+						} else if (totalPoints<10) {
+							return roy;
+						} else if (totalPoints<12) {
+							return kevin;
+						} else if (totalPoints<14) {
+							return meredith;
+						} else if (totalPoints<19) {
+							return michael;
+						} else if (totalPoints<22) {
+							return andy;
+						} else if (totalPoints<=24) {
+							return dwight;
+						}
+					}
+
+					var characters = [toby, pam, jim, phyllis, roy, kevin, meredith, michael, andy, dwight];
+					var calculatedChar = getCharacter();
+
+					$(calculatedChar).addClass("characterResult");
+					$(calculatedChar).removeClass("removeCharacter");
+
+					for(var i = 0; i < characters.length; i++){ 
+   						if (characters[i] === calculatedChar) {
+   							characters.splice(i, 1); 
+    						i--;
+						}
+						$(characters[i]).addClass("removeCharacter");
+						$(characters[i]).removeClass("characterResult");
+					}
+
+				} else if (whichQuiz = "morty") {
+					var totalPoints;
+				}
+
+				//calls function within a function
+				clearAnswers();
+			}
+
+			//parameters = the answer choices in the selected question, no return, shows user which answer is selected
+			function selectanswer (answer, unselected1, unselected2, unselected3) {
+				//uses jQuery functions
+				$(answer).addClass("selected");
+				$(unselected1).removeClass("selected");
+				$(unselected2).removeClass("selected");
+				$(unselected3).removeClass("selected");
+			}
+
+		</script>
+
+	</head>
+
+	<body>
+
+		<div class="container" id="opener">
+			<div class="row">
+				<div class="col-md-12">
+					<h2>
+						Alex Hanna Functions Project
+					</h2>
+					<p>
+						AP Comp Sci
+					</p>
+				</div>
+			</div>
+
+			<div class="row" style="padding-bottom:5%;">
+				<div class="col-md-6">
+					<button onclick="takeOfficeQuiz()">Take Office Quiz</button>
+				</div>
+				<div class="col-md-6">
+					<button onclick="takeMortyQuiz()">Take Rick and Morty Quiz</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="container" id="quizbox">
+			<div class="row" style="padding-bottom:5%;">
+				<div class="col-md-12">
+					<h2 id="quiztitle">
+						What character from The Office are you?
+					</h2>
+				</div>
+				<div class="col-md-12">
+					<button onclick="goBack()">Go Back</button>
+				</div>
+			</div>
+		
+			<div class="row" style="background-color:#313131; ">
+				<div class="col-md-12">
+					<h3 id="question1">
+						Pick a paper
+					</h3>
+				</div>
+				<div class="col-md-6 selection" id="q1a1" onclick="selectanswer(q1a1, q1a2, q1a3, q1a4);">
+					<p>
+						newspaper
+					</p>
+				</div>
+				<div class="col-md-6 selection" id="q1a2" onclick="selectanswer(q1a2, q1a1, q1a3, q1a4)">
+					<p>
+						card stock
+					</p>
+				</div>
+				<div class="col-md-6 selection" id="q1a3" onclick="selectanswer(q1a3, q1a1, q1a2, q1a4)">
+					<p>
+						glossy paper
+					</p>
+				</div>
+				<div class="col-md-6 selection" id="q1a4" onclick="selectanswer(q1a4, q1a1, q1a2, q1a3)">
+					<p>
+						printer paper
+					</p>
+				</div>	
+			</div>
+
+			<div class="row" style="background-color:#212121; ">
+				<div class="col-md-12">
+					<h3 id="question2">
+						Pick a home
+					</h3>
+				</div>
+				<div class="col-md-6 selection" id="q2a1" onclick="selectanswer(q2a1, q2a2, q2a3, q2a4);">
+					<p>
+						suburb
+					</p>
+				</div>
+				<div class="col-md-6 selection" id="q2a2" onclick="selectanswer(q2a2, q2a1, q2a3, q2a4);">
+					<p>
+						mansion
+					</p>
+				</div>
+				<div class="col-md-6 selection" id="q2a3" onclick="selectanswer(q2a3, q2a1, q2a2, q2a4);">
+					<p>
+						house boat
+					</p>
+				</div>
+				<div class="col-md-6 selection" id="q2a4" onclick="selectanswer(q2a4, q2a1, q2a2, q2a3);">
+					<p>
+						farm
+					</p>
+				</div>	
+			</div>
+
+			<div class="row" style="background-color:#313131; ">
+				<div class="col-md-12">
+					<h3 id="question3">
+						How will you probably die?
+					</h3>
+				</div>
+				<div class="col-md-6 selection" id="q3a1" onclick="selectanswer(q3a1, q3a2, q3a3, q3a4);">
+					<p>
+						alone
+					</p>
+				</div>
+				<div class="col-md-6 selection" id="q3a2" onclick="selectanswer(q3a2, q3a1, q3a3, q3a4);">
+					<p>
+						exhaustion
+					</p>
+				</div>
+				<div class="col-md-6 selection" id="q3a3" onclick="selectanswer(q3a3, q3a2, q3a1, q3a4);">
+					<p>
+						drug overdose
+					</p>
+				</div>
+				<div class="col-md-6 selection" id="q3a4" onclick="selectanswer(q3a4, q3a2, q3a3, q3a1);">
+					<p>
+						You will never die
+					</p>
+				</div>	
+			</div>
+
+			<div class="row" style="background-color:#212121; ">
+				<div class="col-md-12">
+					<h3 id="question4">
+						How fast do your feelings regenerate?
+					</h3>
+				</div>
+				<div class="col-md-6 selection" id="q4a1" onclick="selectanswer(q4a1, q4a2, q4a3, q4a4);">
+					<p>
+						normal
+				</div>
+				<div class="col-md-6 selection" id="q4a2" onclick="selectanswer(q4a2, q4a1, q4a3, q4a4);">
+					<p>
+						normal
+					</p>
+				</div>
+				<div class="col-md-6 selection" id="q4a3" onclick="selectanswer(q4a3, q4a2, q4a1, q4a4);">
+					<p>
+						slowly
+					</p>
+				</div>
+				<div class="col-md-6 selection" id="q4a4" onclick="selectanswer(q4a4, q4a2, q4a3, q4a1);">
+					<p>
+						half the rate of a normal human's
+					</p>
+				</div>	
+			</div>
+
+			<div class="col-md-12" style="padding-bottom:5%;">
+				<button onclick="getResult()">Get Result</button>
+			</div>
+
+		</div>
+
+		<div class="container" id="result">
+			<div class="row">
+				<div class="col-md-12">
+					<h2>
+						Your Results
+					</h2>
+					<p>
+						Based on your responses, you would most likely be -
+					</p>
+				</div>
+				<div class="col-md-12 finalimage" id="kevin">
+					<p>Kevin</p>
+					<img src="https://upload.wikimedia.org/wikipedia/en/thumb/6/60/Office-1200-baumgartner1.jpg/260px-Office-1200-baumgartner1.jpg" alt="Kevin">
+				</div>
+				<div class="col-md-12 finalimage" id="michael">
+					<p>Michael</p>
+					<img src="https://upload.wikimedia.org/wikipedia/en/d/dc/MichaelScott.png" alt="Michael">
+				</div>
+				<div class="col-md-12 finalimage" id="dwight">
+					<p>Dwight</p>
+					<img src="https://brobible.files.wordpress.com/2018/10/best-of-dwight-schrute-the-office-compilation.jpg?quality=90&w=650&h=431" alt="Dwight">
+				</div>
+				<div class="col-md-12 finalimage" id="jim">
+					<p>Jim</p>
+					<img src="https://img1.looper.com/img/gallery/was-jim-halpert-from-the-office-secretly-a-sociopath/intro-1565015060.jpg" alt="Jim">
+				</div>
+				<div class="col-md-12 finalimage" id="phyllis">
+					<p>Phyllis</p>
+					<img src="https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters_opt/p-the-office-phyllis-smith.jpg" alt="Phyllis">
+				</div>
+				<div class="col-md-12 finalimage" id="meredith">
+					<p>Meredith</p>
+					<img src="https://upload.wikimedia.org/wikipedia/en/thumb/6/6f/Meredith_Palmer.jpg/255px-Meredith_Palmer.jpg" alt="Meredith">
+				</div>
+				<div class="col-md-12 finalimage" id="andy">
+					<p>Andy</p>
+					<img src="https://millithought.files.wordpress.com/2015/05/andy-andy-bernard-16100805-512-288.jpg?w=512" alt="Andy">
+				</div>
+				<div class="col-md-12 finalimage" id="pam" >
+					<p>Pam</p>
+					<img src="https://theofficeanalytics.files.wordpress.com/2017/09/pam-halpert-1.jpg?w=1200" alt="Pam">
+				</div>
+				<div class="col-md-12 finalimage" id="roy">
+					<p>Roy</p>
+					<img src="https://i.redd.it/lcq15ksg8b401.png" alt="Roy" class="finalimage">
+				</div>
+				<div class="col-md-12 finalimage" id="toby">
+					<p>Toby</p>
+					<img src="https://imgix.bustle.com/uploads/image/2018/1/26/44c0ef65-9d3d-466d-92d2-7cb0d7153786-screen-shot-2018-01-26-at-31848-pm.png?w=970&h=546&fit=crop&crop=faces&auto=format&q=70" alt="Toby">
+				</div>
+			</div>
+
+			<div class="row" style="padding-bottom:5%;">
+				<div class="col-md-12">
+					<button onclick="goBack()">Go Back to Start</button>
+				</div>
+			</div>
+		</div>
+
+		<div id="underconstruction">
+			<div>
+				<p> Quiz under construction </p>
+			</div>
+			<div style="text-align:center;">
+				<button onclick="goBack()">Go Back</button>
+			</div>
+		</div>
+
+
+	</body>
+</html>
