@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+    <!--
+        Alex Hanna
+        December 2019
+        Canvaas painting project
+    -->
+<html>
+    <head>
+        <title>MF PAINT</title>
+    </head>
+    <body>
+        <canvas id="myCanvas" width="500" height="500" style="border:1px solid">
+        </canvas>
+        <script>
+            //set up the canvas element
+            var myCanvas = document.getElementById("myCanvas");
+            var context = myCanvas.getContext("2d");
+
+            //testing the canvas element with a drawing
+            context.strokeStyle = "#007777";
+            context.strokeRect(25, 25, 150, 75);
+
+            //drawing a path shape
+            context.beginPath();
+            context.moveTo(50,50);
+            context.lineTo(50,150);
+            context.lineTo(100,150);
+            context.lineTo(100,125);
+            context.lineTo(75,125);
+            context.lineTo(75,50);
+            context.lineTo(50,50);
+            context.strokeStyle = "";
+            context.stroke();
+            context.closePath();
+
+            myCanvas.addEventListener("click",function(event) {
+                console.log(event.offsetX, event.offsetY);
+
+            })
+        </script>
+    </body>
+</html>
+
