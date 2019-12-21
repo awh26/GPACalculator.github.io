@@ -2,42 +2,140 @@
     <!--
         Alex Hanna
         December 2019
-        Canvaas painting project
+        Canvas painting project
     -->
 <html>
     <head>
         <title>MF PAINT</title>
+        <style>
+            html {
+                background-color: #121212;
+                color:aqua;
+            }
+            canvas {
+                border: solid thin aqua;
+                border-radius:15px;
+            }
+
+			.buttons {
+				background-color:#0b0c10;
+				color:#c5c6c7;
+				border-radius:2px;
+				border:2px solid aqua;
+				width:100px;
+				height:35px;
+			}
+
+			.buttons:hover{
+				cursor:pointer;
+				background-color:#212121;
+			}
+            
+        </style>
+
+        <script>
+            function magenta() {
+                clearCanvas();
+                console.log("change called");
+                for (var i = 0; i< eventArray.length; i++) {
+                    ctx.arc(event.offsetX[i], event.offsetY[i], 2, 1, 2*Math.PI);
+                    ctx.strokeStyle = "magenta";
+                    ctx.stroke();
+                }
+            }
+
+            function etch() {
+                clearCanvas();
+                ctx.beginPath();
+                ctx.strokeStyle = "aqua";
+                ctx.lineWidth = 1;
+                for (var i = 0; i < eventArray.length - 10; i++) {
+                    ctx.moveTo(eventArray[i].offsetX, eventArray[i].offsetY);
+                    ctx.lineTo(eventArray[i+10].offsetX, eventArray[i+10].offsetY);
+                }
+                ctx.stroke();
+                ctx.closePath();
+            }
+
+            function spray() {
+                clearCanvas();
+                for (var i = 0; i < eventArray.length - 10; i++) {
+                    for (var j = 0; j < 6; j++) {
+                        ctx.beginPath();
+                        ctx.arc(event.offsetX[i], event.offsetY[i], 2, 1, 2*Math.PI);
+                        ctx.strokeStyle = "aqua";
+                        ctx.stroke();
+                    }
+                }
+                ctx.stroke();
+                ctx.closePath();
+            }
+
+            function clearCanvas(){
+                ctx.clearRect(0,0,myCanvas.width,myCanvas.height);
+            }
+        </script>
     </head>
     <body>
-        <canvas id="myCanvas" width="500" height="500" style="border:1px solid">
-        </canvas>
+
+        <h1>Paint</h1>
+        <p>Hold shift to paint</p>
+
+        <div>
+            <canvas id="myCanvas" width="500" height="500"></canvas>
+        </div>
+
+        <div>
+            <button id="clear" class="buttons" onclick="clearCanvas()">Clear</button>
+        </div>
+        <div>
+            <button id="change" class="buttons" onclick="magenta()">Magenta</button>
+        </div>
+        <div>
+            <button id="etch" class="buttons" onclick="etch()">Etch</button>
+        </div>
+        <div>
+            <button id="spray" class="buttons" onclick="spray()">Spray</button>
+            <br>
+            <input type="range" name="points" min="0" max="10">
+        </div>
+
+
+
         <script>
             //set up the canvas element
             var myCanvas = document.getElementById("myCanvas");
-            var context = myCanvas.getContext("2d");
+            var ctx = myCanvas.getContext("2d");
 
-            //testing the canvas element with a drawing
-            context.strokeStyle = "#007777";
-            context.strokeRect(25, 25, 150, 75);
-
-            //drawing a path shape
-            context.beginPath();
-            context.moveTo(50,50);
-            context.lineTo(50,150);
-            context.lineTo(100,150);
-            context.lineTo(100,125);
-            context.lineTo(75,125);
-            context.lineTo(75,50);
-            context.lineTo(50,50);
-            context.strokeStyle = "";
-            context.stroke();
-            context.closePath();
+            //array to hold events when shift
+            var eventArray = [];
 
             myCanvas.addEventListener("click",function(event) {
                 console.log(event.offsetX, event.offsetY);
 
             })
+
+            //create my event listener to listen for clicks
+            myCanvas.addEventListener('mousemove', function(event){
+                console.log(event.offsetX, event.offsetY);
+                if(event.shiftKey){
+                    console.log("shift");
+                    eventArray.push(event); //keeps track of event when shift is active
+
+                    ctx.beginPath();
+                    ctx.arc(event.offsetX, event.offsetY, 5, 0, 2*Math.PI);
+                    ctx.strokeStyle = "aqua";
+                    ctx.stroke();
+                    ctx.closePath();
+                }
+            });
         </script>
+
+        <style>
+            #myCanvas { 
+                cursor: url('data:image/x-icon;base64,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'), auto; 
+            }
+        </style>
+
     </body>
 </html>
-
