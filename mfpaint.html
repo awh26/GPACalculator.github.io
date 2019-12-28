@@ -24,13 +24,52 @@
 				border-radius:2px;
 				border:2px solid aqua;
 				width:100px;
-				height:35px;
+                height:35px;
+                align-self: center;
 			}
 
 			.buttons:hover{
 				cursor:pointer;
 				background-color:#212121;
-			}
+            }
+            
+            .slider {
+                -webkit-appearance: none;
+                width: 100%;
+                height: 15px;
+                border-radius: 5px;
+                background: #d3d3d3;
+                outline: none;
+                opacity: 0.7;
+                -webkit-transition: .2s;
+                transition: opacity .2s;
+            }
+
+            .slider:hover {
+                opacity: 1;
+            }
+
+            .colors {
+                width:30%;
+            }
+
+            .slider::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 25px;
+                height: 25px;
+                border-radius: 50%;
+                background: aqua;
+                cursor: pointer;
+            }
+
+            .slider::-moz-range-thumb {
+                width: 25px;
+                height: 25px;
+                border-radius: 50%;
+                background: aqua;
+                cursor: pointer;
+            }
             
         </style>
 
@@ -41,6 +80,26 @@
                 for (var i = 0; i< eventArray.length; i++) {
                     ctx.arc(event.offsetX[i], event.offsetY[i], 2, 1, 2*Math.PI);
                     ctx.strokeStyle = "magenta";
+                    ctx.stroke();
+                }
+            }
+
+            function green() {
+                clearCanvas();
+                console.log("change called");
+                for (var i = 0; i< eventArray.length; i++) {
+                    ctx.arc(event.offsetX[i], event.offsetY[i], 2, 1, 2*Math.PI);
+                    ctx.strokeStyle = "green";
+                    ctx.stroke();
+                }
+            }
+
+            function yellow() {
+                clearCanvas();
+                console.log("change called");
+                for (var i = 0; i< eventArray.length; i++) {
+                    ctx.arc(event.offsetX[i], event.offsetY[i], 2, 1, 2*Math.PI);
+                    ctx.strokeStyle = "yellow";
                     ctx.stroke();
                 }
             }
@@ -86,21 +145,25 @@
             <canvas id="myCanvas" width="500" height="500"></canvas>
         </div>
 
-        <div>
-            <button id="clear" class="buttons" onclick="clearCanvas()">Clear</button>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; width:500px;">
+            <div>
+                <button id="clear" class="buttons" onclick="clearCanvas()">Clear</button>
+            </div>
+            <div>
+                <button id="change" class="buttons colors" onclick="magenta()" style="background-color:magenta;"></button>
+                <button id="change" class="buttons colors" onclick="green()" style="background-color:green;"></button>
+                <button id="change" class="buttons colors" onclick="yellow()" style="background-color:yellow;"></button>
+            </div>
+            <div>
+                <button id="etch" class="buttons" onclick="etch()">Etch</button>
+            </div>
+            <div>
+                <button id="spray" class="buttons" onclick="spray()">Spray</button>
+                <div style="padding-top:10px;">
+                    <input type="range" class="slider" name="points" min="0" max="10">
+                </div>
+            </div>
         </div>
-        <div>
-            <button id="change" class="buttons" onclick="magenta()">Magenta</button>
-        </div>
-        <div>
-            <button id="etch" class="buttons" onclick="etch()">Etch</button>
-        </div>
-        <div>
-            <button id="spray" class="buttons" onclick="spray()">Spray</button>
-            <br>
-            <input type="range" name="points" min="0" max="10">
-        </div>
-
 
 
         <script>
@@ -117,14 +180,14 @@
             })
 
             //create my event listener to listen for clicks
-            myCanvas.addEventListener('mousemove', function(event){
+            myCanvas.addEventListener('mousemove', function(event) {
                 console.log(event.offsetX, event.offsetY);
                 if(event.shiftKey){
                     console.log("shift");
                     eventArray.push(event); //keeps track of event when shift is active
 
                     ctx.beginPath();
-                    ctx.arc(event.offsetX, event.offsetY, 5, 0, 2*Math.PI);
+                    ctx.arc(event.offsetX, event.offsetY, 2, 0, 2*Math.PI);
                     ctx.strokeStyle = "aqua";
                     ctx.stroke();
                     ctx.closePath();
