@@ -1,0 +1,187 @@
+<!DOCTYPE HTML>
+<html>
+	<!--
+		Alex Hanna
+		Due 11/12/19
+		Road Trip Project
+		Given two points, car type, road type, and gas price
+		Calculates distance travelled, time of trip, and cost of trip
+	-->
+	<head>
+		<title>Road Trip!</title>
+	</head>
+	<body>
+		<style>
+
+			/* centers everything, sets background color */
+			body {
+				background-color:#0b0c10;
+				position:absolute;
+				top:50%;
+				left:50%;
+				transform:translate(-50%,-50%);
+			}
+
+			.container {
+				width:75vw;
+			}
+
+			h1 {
+				color:#66FCF1;
+			}
+
+			p {
+				color:#c5c6c7;
+			}
+
+			#inputBox {
+				background-color:#0b0c10;
+				color:#c5c6c7;
+				border-radius:2px;
+				border:2px solid #66FCF1;
+				width:150px;
+				height:30px;
+			}
+
+			/* makes input button a certain color and size with a solid border with rounded edges */
+			#inputButton {
+				background-color:#0b0c10;
+				color:#c5c6c7;
+				border-radius:2px;
+				border:2px solid #66FCF1;
+				width:50px;
+				height:35px;
+			}
+
+			/* changes color of button when hovering on it.  changes cursor to pointer */
+			#inputButton:hover{
+				cursor:pointer;
+				background-color:#212121;
+			}
+
+		</style>
+
+		<script>
+			// 2d array of each city paired with its distance from city A 
+			var cities = [
+				["A", 0],
+				["B", 450],
+				["C", 590],
+				["D", 710],
+				["E", 1030],
+				["F", 1280],
+				["G", 1360]
+			];
+
+			// 2d array of each car paired with its mileage per gallon
+			var cars = [
+				["C", 28], // compact
+				["M", 25], // mid-size
+				["F", 22], // full-size
+				["V", 20], // van/SUV
+			];
+
+			// 2d array of each road paired with the average speed travelled on it
+			var roads = [
+				["I", 65], // interstate
+				["H", 60], // highway
+				["M", 55], // main roads
+				["S", 45], // side roads
+			];
+
+			// function which finds the value paired with a given item for a given array
+			function getValue(array, item) {
+				for (var i = 0; i < array.length; i++) { // repeats for the length of the array
+        			if (array[i][0] == item) { // checks if the item is equal to the first value of each data pair
+            			return array[i][1]; // if the item is equal to the first value of each data pair, returns the number found paired with the item
+        			}
+    			}
+			}
+
+			// function calculates time of trip
+			function calculateTime(distance, road) {
+				var minutes = (distance / getValue(roads, road)) * 60; // finds the speed able to be travelled on the given road using the getValue function.  Divides distance by this value and then multiplies by 60 to find the minutes spent on the road
+				var hours = Math.floor(minutes/60); // divides total minutes by 60 to find total hours and then rounds this value DOWN to the nearest integer
+				if (hours<10) { // checks if the number of hours is from 0 - 9
+					hours = "0" + hours; // if the number of hours is from 0 - 9, adds a 0 in front of value
+				}
+
+				minutes = Math.round(minutes % 60); // modulo of the total minutes by 60 to find left over amount of minutes, then rounds this value to nearest integer
+				return (hours + ":" + minutes); // formats result properly
+			}
+
+			//function calculates cost of trip
+			function calculateCost(distance, car, costPerGallon) {
+				var cents = (costPerGallon * (distance / getValue(cars, car))) * 100; // finds cost of trip in cents by dividing distance by mpg of the car, then multiplying by the inputted cost per gallon and by 100
+				var dollars = Math.floor(cents / 100); // divides total cents by 100 to find total dollars and then rounds this value DOWN to the nearest integer
+				cents = Math.round(cents % 100); // modulo of the total cents by 100 to find left over amount of cents, then rounds this value to nearest integer
+				return "$" + dollars + "." + cents; // formats result properly
+			}
+
+			var counter = 0; // creates a counter variable
+
+			// function reads the input and calls other functions to calculate exact values, then prints output underneath input form
+			function calculateTrip() {
+
+				var input = document.getElementById("inputBox").value; // gets string entered by user
+				document.getElementById("inputBox").value = ""; //clears input box
+				var inputArray = input.split(", "); // creates array out of the string entered by user
+				var dist = Math.abs(getValue(cities, inputArray[0]) - getValue(cities, inputArray[1])); // finds distance travelled using 
+
+				var totalTime = calculateTime(dist, inputArray[3]);
+				var totalCost = calculateCost(dist, inputArray[2], inputArray[4]);
+
+				var result = dist + ", " + totalTime + ", " + totalCost;
+
+				counter++; // adds 1 to counter variable each time program is run
+
+				if (counter === 1) { // if counter value is 1, prints result in the paragraph for output 1
+					document.getElementById("output1").innerHTML += result;
+				} else if (counter === 2) { // if counter value is 2, prints result in the paragraph for output 2
+					document.getElementById("output2").innerHTML += result;
+				} else if (counter === 3) { // if counter value is 3, prints result in the paragraph for output 3
+					document.getElementById("output3").innerHTML += result;
+				} else if (counter === 4) { // if counter value is 4, prints result in the paragraph for output 4
+					document.getElementById("output4").innerHTML += result;
+				} else if (counter === 5) { // if counter value is 5, prints result in the paragraph for output 5
+					document.getElementById("output5").innerHTML += result;
+					document.getElementById("maxMessage").style.display = "block"; //displays message that the user must reload the page if they want to calculate more trips
+				}
+			}
+
+			/*test cases
+				A, C, M, H, 3.79
+				E, F, C, S, 3.69
+				B, E, F, M, 3.59
+				F, G, V, H, 3.89
+				A, G, C, I, 3.63
+			*/
+
+		</script>
+
+		<h1>Road Trip Project</h1>
+		<p>Alex Hanna<br>AP Comp Sci<br>ACSL Practice</p>
+
+		<div class="container">
+			<p>
+				Input two points (A, B, C, D, E, F, G), car type (C, M, F, V), road type (I, H, M, S), and gas price ($.$$)
+				<br>
+				Calculates distance travelled, time of trip, and cost of trip
+			</p>
+			<p>Input a comma and a space in between each value (", ")</p>
+
+			<input id="inputBox" placeholder="Input">
+        	<button id="inputButton" onclick="calculateTrip()">Submit</button>
+ 
+        	<p id="output1">Output 1: </p>
+        	<p id="output2">Output 2: </p>
+        	<p id="output3">Output 3: </p>
+        	<p id="output4">Output 4: </p>
+        	<p id="output5">Output 5: </p>
+
+        	<p id="maxMessage" style="display:none;">Reload page to calculate more trips</p>
+
+		</div>
+
+	</body>
+</html>
