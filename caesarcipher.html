@@ -1,0 +1,208 @@
+<!DOCTYPE HTML>
+<html>
+	<!--
+		Alex Hanna
+		Due 2/28/20
+		Caesar Cipher Project
+	-->
+	<head>
+		<title>Caesar Cipher</title>
+	</head>
+	<body>
+		<style>
+
+			/* centers everything, sets background color */
+			body {
+				background-color:#0b0c10;
+				position:absolute;
+				top:50%;
+				left:50%;
+				transform:translate(-50%,-50%);
+				color:#c5c6c7;
+			}
+
+			.container {
+				width:75vw;
+			}
+
+			h1 {
+				color:aqua;
+			}
+
+			tr {
+				height:50px;
+			}
+
+			td {
+				text-align:center;
+			}
+
+			#inputBox {
+				background-color:#0b0c10;
+				color:#c5c6c7;
+				width:100%;
+				height:50px;
+				border:2px solid aqua;
+			}
+
+			/* makes input button a certain color and size with a solid border with rounded edges */
+			#inputButton {
+				background-color:#0b0c10;
+				color:#c5c6c7;
+				width:100%;
+				height:50px;
+				border:2px solid aqua;
+			}
+
+			/* changes color of button when hovering on it.  changes cursor to pointer */
+			#inputButton:hover{
+				cursor:pointer;
+				background-color:#212121;
+            }
+
+            #slider {
+                padding-top:10px;
+                padding-bottom:10px;
+                width: 120px;
+                height: 25px;
+            }
+
+			.tooltip {
+				position: relative;
+				display: inline-block;
+			}
+			
+			.tooltip .tooltiptext {
+				visibility: hidden;
+				width: 140px;
+				background-color: #555;
+				color:#c5c6c7;
+				text-align: center;
+				border-radius: 6px;
+				padding: 5px;
+				position: absolute;
+				z-index: 1;
+				bottom: 150%;
+				left: 50%;
+				margin-left: -75px;
+				opacity: 0;
+				transition: opacity 0.3s;
+			}
+			
+			.tooltip .tooltiptext::after {
+				content: "";
+				position: absolute;
+				top: 100%;
+				left: 50%;
+				margin-left: -5px;
+				border-width: 5px;
+				border-style: solid;
+				border-color: #555 transparent transparent transparent;
+			}
+			
+			.tooltip:hover .tooltiptext {
+				visibility: visible;
+				opacity: 1;
+			}
+
+			.tooltip button {
+				border:2px solid aqua;
+				background-color:#0b0c10;
+				color:#c5c6c7;
+			}
+
+			#output {
+				background-color:#0b0c10;
+				border:none;
+				height:50px;
+				width:100%;
+				color:#c5c6c7;
+			}
+		</style>
+
+		<script>
+
+            function encrypt() {
+				var plainText = document.getElementById("inputBox").value.toUpperCase();
+
+				var shift = document.getElementById("slider").value;
+
+                var encryptedMessage = "";
+
+				for(var i = 0; i < plainText.length; i++) {        
+					var plainCode = plainText.charCodeAt(i);
+					
+					if ((plainCode >= "A".charCodeAt(0)) && (plainCode <= "Z".charCodeAt(0))){
+						var shiftedCode = plainCode + parseInt(shift);
+						if (shiftedCode > "Z".charCodeAt(0)) {
+							shiftedCode -= 26; //shiftedCode = ShiftedCode-26
+						}
+						encryptedMessage += String.fromCharCode(shiftedCode);
+					} else {
+						encryptedMessage += plainText[i];
+					}
+				}
+				document.getElementById("output").value = "Output: " + encryptedMessage;
+            }
+
+			function copyText() {
+				var copyText = document.getElementById("output");
+				copyText.select();
+				copyText.setSelectionRange(0, 99999);
+				document.execCommand("copy");
+			
+				var tooltip = document.getElementById("myTooltip");
+				tooltip.innerHTML = "Copied: " + copyText.value;
+			}
+			
+			function outFunc() {
+				var tooltip = document.getElementById("myTooltip");
+				tooltip.innerHTML = "Copy to clipboard";
+			}
+		</script>
+	
+	</head>
+	<body>	
+
+		<h1>Caesar Cipher</h1>
+		<p>Alex Hanna<br>AP Comp Sci</p>
+		<p>
+			Input your message and select a shift key.  Then submit for your message to be encrypted.
+			<br>Click on the button to copy the encyrpted message.
+			<br>Paste the text (e.g. ctrl+v) afterwards in a different window.
+		</p>
+
+
+		<div class="container">
+			<table style="width:250px">
+				<tr>
+					<td colspan = 2><input id="inputBox" placeholder="Input"></td>
+				</tr>
+				<tr>
+					<td>
+						<input type="range" name="ageInputName" id="slider" value="1" min="1" max="25" oninput="numDisplay.value = slider.value">
+					</td>
+					<td>
+						<output style="color:#c5c6c7;" name="ageOutputName" id="numDisplay">1</output>
+					</td>
+				</tr>
+				<tr>
+					<td colspan = 2><button id="inputButton" onclick="encrypt()">Submit</button></td>
+				</tr>
+				<tr>
+					<td>
+						<input type="text" readonly="readonly" id="output">
+					</td>
+					<td>
+						<div class="tooltip">
+							<button onclick="copyText()" onmouseout="outFunc()">
+								<span class="tooltiptext" id="myTooltip">Copy to clipboard</span>
+								Copy message
+							</button>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>
