@@ -7,47 +7,28 @@
 		<meta name="description" content="Alex Hanna website">
 		<meta name="author" content="Alex Hanna">
 		<title>Alex Hanna</title>
-		<link rel="stylesheet" type="text/css" href="style.css">
-
-		<!-- Fonts import-->
-		<link href="https://fonts.googleapis.com/css?family=Open+Sans:black&display=swap" rel="stylesheet">
-
-		<!-- Bootstrap import-->
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
-		<!-- jQuery import-->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 
 		<style>
+			#container {
+				width:75wv;
+				text-align:center;
+				padding-top:10vh;
+				font-size:1em;
+			}
+
 			body {
 				background-color:#121212;
 				color:white;
 				font-family: 'Open Sans', sans-serif;
 			}
 
-			h2,h3 {
-				font-family: 'Lato', sans-serif;
-			}
-
 			h2 {
 				color:#BB86FC;
+				font-size:2em;
 			}
 
-			.container {
-				width:80%;
-				margin:auto;
-				overflow:hidden;
-				text-align:center;
-				background-color:#212121; 
-				border-radius:10%; 
-				margin-top:10%;
-				margin-bottom:10%;
-			}
-
-			.row {
-				padding-top:5%;
-
+			tr {
+				height:75px;
 			}
 
 			button {
@@ -55,6 +36,9 @@
 				background-color:#212121;
 				border:1px solid white;
 				border-radius:5px;
+				width: 300px;
+				height:40px;
+				font-size:1em;
 			}
 
 			button:hover {
@@ -66,48 +50,49 @@
 				text-decoration: none;
 				color:white;
 			}
-
 		</style>
 
 	</head>
 
 	<body>
 
-		<div class="container" id="opener">
-			<div class="row">
-				<div class="col-md-12">
-					<h2>
-						Alex Hanna Projects
-					</h2>
-					<p>
-						AP Computer Science Principles
-					</p>
-				</div>
+		<div id="container">
+			<div>
+				<h2>
+					AP Computer Science Principles Projects
+				</h2>
+				<p>
+					Alex Hanna
+				</p>
 			</div>
-
-			<div class="row" style="padding-bottom:5%;">
-				<div class="col-md-6">
-					<button><a href="gpaCalculator.html">GPA Calculator</a></button>
-				</div>
-				<div class="col-md-6">
-					<button><a href="buzzfeedQuizProject.html">"Buzzfeed" Quizzes</a></button>
-				</div>
-			</div>
-			<div class="row" style="padding-bottom:5%;">
-				<div class="col-md-6">
-					<button><a href="mfpaint.html">HTML Canvas Drawing</a></button>
-				</div>
-				<div class="col-md-6">
-					<button><a href="roadTrip.html">Road Trip (Practice ACSL Assignment)</a></button>
-				</div>
-			</div>
-			<div class="row" style="padding-bottom:5%;">
-				<div class="col-md-6">
-					<button><a href="ciphers.html">Ciphers</a></button>
-				</div>
-				<div class="col-md-6">
-				</div>
-			</div>
+	
+			<table style="width:100%">
+				<tr>
+					<td>
+						<button><a href="caesarcipher.html">Caesar Cipher</a></button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<button><a href="roadTrip.html">Road Trip (Practice ACSL Assignment)</a></button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<button><a href="mfpaint.html">HTML Canvas Drawing</a></button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<button><a href="buzzfeedQuizProject.html">"Buzzfeed" Quizzes</a></button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<button><a href="gpaCalculator.html">GPA Calculator</a></button>
+					</td>
+				</tr>
+			</table>
 		</div>
 
 	</body>
