@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+	<!--
+        Alex Hanna
+        Due Tuesday, May 26, 2020
+        CSP Create Task
+        Connect4
+	-->
+	<head>
+        <!-- metadata-->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+        <meta name="description" content="This is my CSP Create Task. For my create task, I programmed the 
+        classic game called Connect4, in which two players try to connect four of thier tiles before their opponent.">
+		<meta name="author" content="Alex Hanna">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>CSP Create Task</title>
+
+        <!-- Google Fonts Import -->
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&family=Raleway&display=swap" rel="stylesheet">
+	</head>
+
+		<style> /** general page styling **/
+
+			html, body {
+				background-color:#0b0c10; 
+				color:#c5c6c7;
+                margin:none;
+                padding:none;
+                width:100%;
+                height:100%;
+            }
+
+            .container { /** horizontally centers the container, is a class so if I were to expand the code, I would be able to use this multiple times **/
+                position:absolute;
+				left:50%;
+				transform:translate(-50%);
+            }
+
+            h1, h2, h3, h4, h5, h6 {
+                font-family: 'Montserrat', sans-serif;
+            }
+
+            p, a, li, button {
+                font-family: 'Raleway', sans-serif;
+            }
+
+            a:hover {
+                cursor:pointer;
+            }
+
+			h1 {
+				color:#66FCF1;
+			}
+
+            header {
+                background-color:grey;
+                height:150px;
+            }
+
+            button {
+                width:100px;
+                height:40px;
+                border-radius:5px;
+                background-color:white;
+            }
+
+            button:hover {
+                cursor:pointer;
+                background-color:lightgrey;
+            }
+
+        </style>
+        
+	</head>
+	<body>
+
+        <section class="container" id="connect4">
+
+            <style> /** Connect4 Styling **/
+                #dropperTable {
+                    padding:20px;
+                    padding-bottom:5px;
+                }
+
+                #dropperTable td {
+                    height:48px;
+                    width:48px;
+                    border-radius:24px;
+                    border:solid 1px white;
+                }
+
+                #dropperTable td:hover {
+                    background-color:grey;
+                }
+
+                .colDrop:hover {
+                    cursor:pointer;
+                }
+
+                #gameBoard {
+                    background-color:blue;
+                    padding:20px;
+                    padding-top:5px;
+                    border-radius:5px;
+                }
+
+                #gameBoard td {
+                    height:50px;
+                    width:50px;
+                    border-radius:25px;
+                }
+
+                .blank {
+                    background-color:#0b0c10;
+                }
+                
+                .red {
+                    background-color:red;
+                }
+
+                .yellow {
+                    background-color:yellow;
+                }
+            </style>
+
+            <script> //Connect4 Script
+
+                // Variable rows and columns of board array in case someone wants to change this.  This only changes the array in the console, does not change what is displayed.
+                var rows = 6;
+                var cols = 7;
+
+                //creates gameboard
+                var arr = [];
+
+                for (let i = 0; i < rows; i++) {
+					arr[i] = [];
+                    for (let j = 0; j < cols; j++) {
+                        arr[i].push("blank");
+                    }
+                }
+
+                //stores turns (if a player wants to go back and just to display)
+                var turns = [];
+                var turnNum = 1;
+
+                function storeTurn(x,y,team) {
+                    turns[turnNum] = [];
+                    turns[turnNum].push(x); //adds x coordinate to array of past turns
+                    turns[turnNum].push(y); //adds y coordinate to array of past turns
+
+                    document.getElementById('gameLog').innerHTML += "<br>" + turnNum + ". " + team + " went at " + (x+1) + "," + (y+1); //prints move to turn log on screen
+
+                    turnNum++; //increases turn number by 1
+                }
+
+                function undomove() {
+
+                    turnNum--;
+
+                    var coord = turns[turns.length -1][0] + "," + turns[turns.length -1][1];
+                    document.getElementById(coord).classList.remove('red');
+                    document.getElementById(coord).classList.remove('yellow');
+
+                    document.getElementById(coord).classList.add('blank');
+
+                    arr[turns[turns.length -1][0]][turns[turns.length -1][1]] = 'blank';
+
+                    nextTurn(); //changes the color that has the next turn.  has to be before the next line of code so that the correct team is displayed for who undid their move.
+
+                    document.getElementById('gameLog').innerHTML += "<br>" + turnNum + ". " + turn + " undid their last move.";
+
+                    turns.pop(); //removes turn from array of turns
+                }
+
+                //determines whose turn it is
+                var turn = "red";
+
+                function nextTurn() { //alternates turns by checking whos turn it is currently
+                    if (turn == "red") {
+                        turn = "yellow";
+                    } else if (turn == "yellow") {
+                        turn = "red";
+                    }
+                }
+
+                function nextBlank(number) {  //checks where to drop the next tile, checks from bottom of array to top.
+                    for (let i = rows - 1; i > -1; i--) {
+                        if (arr[i][number]=="blank") {
+                            return i;
+                        }
+                    }
+                }
+
+                function checkWin() {
+                    var thisColor = "";
+                    // checks horizontal
+                    for (let i = 0; i < rows; i++) {
+                        for (let j = 0; j < cols-3; j++) {
+                            thisColor = arr[i][j];
+                            if (thisColor != "blank" && thisColor == arr[i][j+1]) {
+                                if (thisColor == arr[i][j+2]) {
+                                    if (thisColor == arr[i][j+3]) {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // checks vertical
+                    for (let j = 0; j < cols; j++) {
+                        for (let i = 0; i < rows-3; i++) {
+                            thisColor = arr[i][j];
+                            if (thisColor != "blank" && thisColor == arr[i+1][j]) {
+                                if (thisColor == arr[i+2][j]) {
+                                    if (thisColor == arr[i+3][j]) {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // checks /
+                    for (let i = rows-1; i > 2; i--) {
+                        for (let j = 0; j < cols-3; j++) {
+                            thisColor = arr[i][j];
+                            if (thisColor != "blank" && thisColor == arr[i-1][j+1]) {
+                                if (thisColor == arr[i-2][j+2]) {
+                                    if (thisColor == arr[i-3][j+3]) {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // checks \
+                    for (let i = 0; i < rows-3; i++) {
+                        for (let j = 0; j < cols-3; j++) {
+                            thisColor = arr[i][j];
+                            if (thisColor != "blank" && thisColor == arr[i+1][j+1]) {
+                                if (thisColor == arr[i+2][j+2]) {
+                                    if (thisColor == arr[i+3][j+3]) {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                function falling(x,y,team) {
+
+                    var i = 0;
+                        
+                    var newdrop = setInterval(function() { 
+
+                        document.getElementById('undoBtn').disabled = true;
+                        document.getElementById('undoBtn').innerHTML = 'Button disabled';
+                        
+                        if (i <= x) {
+
+                            var coordinate = i + "," + y;
+
+                            if (i !== 0) {
+                                var beforecoord = i-1 + "," + y;
+                                document.getElementById(beforecoord).classList.remove(team);
+                                document.getElementById(beforecoord).classList.add('blank');
+                            }
+
+                            document.getElementById(coordinate).classList.remove('blank');
+                            document.getElementById(coordinate).classList.add(team);
+                            
+                        }
+
+                        if (i == x) {
+                            clearInterval(newdrop);
+                            document.getElementById('undoBtn').disabled = false;
+                            document.getElementById('undoBtn').innerHTML = 'Undo Move';
+                        }
+
+                        i++;
+
+                    }, 500);
+                    
+                }
+
+                function drop(num) {
+                    var rowNum = nextBlank(num);
+                    arr[rowNum][num] = turn;
+                   
+                    var coord = rowNum + "," + num;
+
+                    falling(rowNum, num, turn);
+
+                    if (checkWin() == true) {
+                        document.getElementById("connect4").style.display = "none";
+                        document.getElementById("winnerText").style.color = turn;
+                        document.getElementById("winnerText").innerHTML = turn + " has won";
+                        document.getElementById("reload").style.display = "block";
+                    }
+
+                    storeTurn(rowNum,num,turn);
+
+                    nextTurn();
+
+                    document.getElementById("bottomText").style.color=turn;
+
+                }
+
+            </script>
+
+            <div>
+                <div style="width:350px;">
+                    <h2>Connect 4</h2>
+                    <p>
+                        Instructions:<br>
+                        Click above the board in the column you wish to go.<br>
+                        Red goes first.<br>
+                        After red has moved, it is yellow's turn.<br>
+                        Try to connect four of your tile in a row before your opponent can get connect four of theirs to win!<br>
+                        
+                        <br>
+                        To start a new game, reload the page.
+                    </p>
+                    <button id="undoBtn" onclick="undomove()">
+                        Undo Move
+                    </button>
+                </div>
+
+                <table id="dropperTable">
+                    <tr> <!--Table for placing pieces.-->
+                        <td onmouseover="this.style.backgroundColor=turn;" onmouseleave="this.style.backgroundColor='#0b0c10';" onclick="drop(0);" class="colDrop"></td>
+                        <td onmouseover="this.style.backgroundColor=turn;" onmouseleave="this.style.backgroundColor='#0b0c10';" onclick="drop(1);" class="colDrop"></td>
+                        <td onmouseover="this.style.backgroundColor=turn;" onmouseleave="this.style.backgroundColor='#0b0c10';" onclick="drop(2);" class="colDrop"></td>
+                        <td onmouseover="this.style.backgroundColor=turn;" onmouseleave="this.style.backgroundColor='#0b0c10';" onclick="drop(3);" class="colDrop"></td>
+                        <td onmouseover="this.style.backgroundColor=turn;" onmouseleave="this.style.backgroundColor='#0b0c10';" onclick="drop(4);" class="colDrop"></td>
+                        <td onmouseover="this.style.backgroundColor=turn;" onmouseleave="this.style.backgroundColor='#0b0c10';" onclick="drop(5);" class="colDrop"></td>
+                        <td onmouseover="this.style.backgroundColor=turn;" onmouseleave="this.style.backgroundColor='#0b0c10';" onclick="drop(6);" class="colDrop"></td>
+                    </tr>
+                </table>
+
+                <table id="gameBoard">
+                    <tr> <!--Top Row-->
+                        <td id="0,0" class="blank"></td>
+                        <td id="0,1" class="blank"></td>
+                        <td id="0,2" class="blank"></td>
+                        <td id="0,3" class="blank"></td>
+                        <td id="0,4" class="blank"></td>
+                        <td id="0,5" class="blank"></td>
+                        <td id="0,6" class="blank"></td>
+                    </tr>
+                    <tr>
+                        <td id="1,0" class="blank"></td>
+                        <td id="1,1" class="blank"></td>
+                        <td id="1,2" class="blank"></td>
+                        <td id="1,3" class="blank"></td>
+                        <td id="1,4" class="blank"></td>
+                        <td id="1,5" class="blank"></td>
+                        <td id="1,6" class="blank"></td>
+                    </tr>
+                    <tr>
+                        <td id="2,0" class="blank"></td>
+                        <td id="2,1" class="blank"></td>
+                        <td id="2,2" class="blank"></td>
+                        <td id="2,3" class="blank"></td>
+                        <td id="2,4" class="blank"></td>
+                        <td id="2,5" class="blank"></td>
+                        <td id="2,6" class="blank"></td>
+                    </tr>
+                    <tr>
+                        <td id="3,0" class="blank"></td>
+                        <td id="3,1" class="blank"></td>
+                        <td id="3,2" class="blank"></td>
+                        <td id="3,3" class="blank"></td>
+                        <td id="3,4" class="blank"></td>
+                        <td id="3,5" class="blank"></td>
+                        <td id="3,6" class="blank"></td>
+                    </tr>
+                    <tr>
+                        <td id="4,0" class="blank"></td>
+                        <td id="4,1" class="blank"></td>
+                        <td id="4,2" class="blank"></td>
+                        <td id="4,3" class="blank"></td>
+                        <td id="4,4" class="blank"></td>
+                        <td id="4,5" class="blank"></td>
+                        <td id="4,6" class="blank"></td>
+                    </tr>
+                    <tr>
+                        <td id="5,0" class="blank"></td>
+                        <td id="5,1" class="blank"></td>
+                        <td id="5,2" class="blank"></td>
+                        <td id="5,3" class="blank"></td>
+                        <td id="5,4" class="blank"></td>
+                        <td id="5,5" class="blank"></td>
+                        <td id="5,6" class="blank"></td>
+                    </tr>
+
+                    <tr id="bottomText" style="text-align:center;">
+                        <td>
+                            <p>C</p>
+                        </td>
+                        <td>
+                            <p>O</p>
+                        </td>
+                        <td>
+                            <p>N</p>
+                        </td>
+                        <td>
+                            <p>N</p>
+                        </td>
+                        <td>
+                            <p>E</p>
+                        </td>
+                        <td>
+                            <p>C</p>
+                        </td>
+                        <td>
+                            <p>T</p>
+                        </td>
+                    </tr>
+                
+                </table>
+
+                <div>
+                    <p id="gameLog">
+                        Move Log: <i>Move number. Team went at row,column</i>
+                    </p>
+                </div>
+            </div>
+
+        </section>
+        <!-- WINNER SCREEN -->
+        <div class="container" style="text-align:center; top:50%; left:50%; transform:translate(-50%,-50%);">
+            <h2 id="winnerText"></h2>
+            <p id="reload" style="display:none;">If you would like to play a new game, please reload the page.</p>
+        </div>
+
+	</body>
+</html>
